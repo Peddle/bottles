@@ -15,7 +15,7 @@ async function main() {
     }
 
     // Add the new check for uncommitted changes
-    const hasChanges = await hasUncommittedChanges();
+    const hasChanges = hasUncommittedChanges();
     if (hasChanges) {
       console.log(chalk.yellow('Uncommitted changes detected. Committing changes...'));
       await commitChanges('bottles pre-commit');
@@ -27,7 +27,7 @@ async function main() {
     await executeUpdates(files, updatePlan);
     console.log(chalk.green('\nAll files updated successfully.'));
 
-    await commitChanges('bottles commit');
+    commitChanges('bottles commit');
     console.log(chalk.green('Changes committed successfully.'));
 
     // Print the diff from the last commit
