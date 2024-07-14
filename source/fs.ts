@@ -45,7 +45,7 @@ async function scanFile(filePath: string): Promise<boolean> {
     const lines = content.split('\n');
 
     for (const line of lines) {
-      if (line.trim().startsWith('//@b') || line.trim().startsWith('// @b')) {
+      if (line.trim().startsWith('@b')) {
         return true;
       }
     }

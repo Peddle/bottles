@@ -2,15 +2,31 @@ import React from 'react';
 import {getFilesWithBComments, readFileContents, writeFileContents} from './fs.ts';
 import {planFileUpdates, executeFileUpdate} from './llm.ts';
 import chalk from 'chalk';
+import { getCurrentBranch, hasUncommittedChanges, commitChanges } from './git.ts';
 
 // Main function to orchestrate the file update process
 async function main() {
   const projectPath = process.cwd();
   try {
+    const currentBranch = await getCurrentBranch();
+    if (currentBranch === 'master' || currentBranch === 'main') {
+      console.error(chalk.red('Error: Cannot run on master or main branch. Please switch to a different branch.'));
+      return;
+    }
+
+    const hasChanges = await hasUncommittedChanges();
+    if (hasChanges) {
+      console.error(chalk.red('Error: There are uncommitted changes. Please commit them before running this script.'));
+      return;
+    }
+
     const files = await getFilesWithComments(projectPath);
     const updatePlan = await planUpdates(files);
     await executeUpdates(files, updatePlan);
     console.log(chalk.green('\nAll files updated successfully.'));
+
+    await commitChanges('bottles commit');
+    console.log(chalk.green('Changes committed successfully.'));
   } catch (error) {
     console.error('An error occurred:', error);
   }

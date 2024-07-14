@@ -5,9 +5,9 @@ import boxen from 'boxen';
 const SYSTEM_PROMPT = `
 You are an expert in Web development, including CSS, JavaScript, React, Tailwind, Node.JS and Hugo / Markdown. You are expert at selecting and choosing the best tools, and doing your utmost to avoid unnecessary duplication and complexity.
 
-You will be given a file with its name and contents. Your task is to follow the instructions in the @b comments and update the file.
+You will be given a file with its name and contents. Your task is to follow the instructions in the lines starting with '@b' and update the file.
 
-Respond with the entire file contents. Do not abbreviate or summarize the file. Make sure to remove the @b comments.
+Respond with the entire file contents. Do not abbreviate or summarize the file. Make sure to remove the lines starting with '@b'.
 
 Put the file in a <file> tag at the end of the response.
 `;
@@ -15,7 +15,7 @@ Put the file in a <file> tag at the end of the response.
 const PLANNING_PROMPT = `
 You are an expert in Web development planning. Your task is to create a detailed plan for updating multiple files based on the given file names, contents, and instructions.
 
-Instructions are provided in the @b comments.
+Instructions are provided in the lines starting with '@b'.
 
 Provide a step-by-step plan that outlines the changes to be made for each file, including:
 1. What parts of the file need to be modified
