@@ -18,6 +18,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.24.3",
     "@inkjs/ui": "^2.0.0",
+    "boxen": "^8.0.0",
     "bufferutil": "^4.0.8",
     "cli-spinners": "2.9.2",
     "ink": "^5.0.1",

@@ -3,8 +3,9 @@ import {render} from 'ink';
 // import meow from 'meow';
 import App from './app';
 import {getFilesWithBComments} from './fs.ts';
-import {updateFile} from './llm.ts';
+import {updateFiles} from './llm.ts';
 import chalk from 'chalk';
+import {readFileContents} from './llm';
 
 // Example usage
 async function main() {
@@ -13,11 +14,15 @@ async function main() {
     const filesWithBComments = await getFilesWithBComments(projectPath);
 
     console.log('\nFiles with @b comments:');
-    for (const file of filesWithBComments) {
-      console.log(chalk.green(file));
-			await updateFile(file);
-    }
-  } catch (error) {
+		const files = await Promise.all(filesWithBComments.map(async (file: string) => {
+			console.log(chalk.green(file));
+			return {
+				filePath: file,
+				contents: await readFileContents(file)
+			}
+		}));
+		await updateFiles(files);
+   } catch (error) {
     console.error('An error occurred:', error);
   }
 }
