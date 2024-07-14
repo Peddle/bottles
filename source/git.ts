@@ -25,3 +25,11 @@ export function commitChanges(message: string): void {
     throw new Error('Failed to commit changes');
   }
 }
+
+export function getLastCommitDiff(): string {
+  try {
+    return execSync('git show --color', { encoding: 'utf8' });
+  } catch (error) {
+    throw new Error('Failed to get diff of the last commit');
+  }
+}

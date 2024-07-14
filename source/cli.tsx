@@ -2,7 +2,7 @@ import React from 'react';
 import {getFilesWithBComments, readFileContents, writeFileContents} from './fs.ts';
 import {planFileUpdates, executeFileUpdate} from './llm.ts';
 import chalk from 'chalk';
-import { getCurrentBranch, hasUncommittedChanges, commitChanges } from './git.ts';
+import { getCurrentBranch, hasUncommittedChanges, commitChanges, getLastCommitDiff } from './git.ts';
 
 // Main function to orchestrate the file update process
 async function main() {
@@ -14,12 +14,6 @@ async function main() {
       return;
     }
 
-    // const hasChanges = await hasUncommittedChanges();
-    // if (hasChanges) {
-    //   console.error(chalk.red('Error: There are uncommitted changes. Please commit them before running this script.'));
-    //   return;
-    // }
-
     const files = await getFilesWithComments(projectPath);
     const updatePlan = await planUpdates(files);
     await executeUpdates(files, updatePlan);
@@ -27,6 +21,11 @@ async function main() {
 
     await commitChanges('bottles commit');
     console.log(chalk.green('Changes committed successfully.'));
+
+    // Print the diff from the last commit
+    const diff = await getLastCommitDiff();
+    console.log(chalk.cyan('\nDiff from the last commit:'));
+    console.log(diff);
   } catch (error) {
     console.error('An error occurred:', error);
   }
