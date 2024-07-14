@@ -14,6 +14,14 @@ async function main() {
       return;
     }
 
+    // Add the new check for uncommitted changes
+    const hasChanges = await hasUncommittedChanges();
+    if (hasChanges) {
+      console.log(chalk.yellow('Uncommitted changes detected. Committing changes...'));
+      await commitChanges('bottles pre-commit');
+      console.log(chalk.green('Pre-commit completed successfully.'));
+    }
+
     const files = await getFilesWithComments(projectPath);
     const updatePlan = await planUpdates(files);
     await executeUpdates(files, updatePlan);
