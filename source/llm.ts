@@ -1,4 +1,3 @@
-import * as fs from 'fs/promises';
 import { Anthropic } from '@anthropic-ai/sdk';
 import chalk from 'chalk';
 import boxen from 'boxen';
@@ -34,46 +33,7 @@ const client = new Anthropic({
   apiKey: ANTHROPIC_API_KEY,
 });
 
-interface FileUpdate {
-  filePath: string;
-  contents: string;
-}
-
-interface PlanningResult {
-  filePath: string;
-  plan: string;
-}
-
-export async function updateFiles(fileUpdates: FileUpdate[]): Promise<void> {
-  try {
-    console.log(chalk.blue('Starting file update process...'));
-
-    // Step 1: Plan the file updates
-    const plan = await planFileUpdates(fileUpdates);
-		console.log(chalk.blue(boxen(`Plan:\n${plan}`, { padding: 1, borderColor: 'blue' })));
-
-    // Step 2: Execute the file updates
-    const conversationHistory: any[] = [];
-    for (let i = 0; i < fileUpdates.length; i++) {
-      const fileUpdate = fileUpdates[i];
-
-      try {
-        const updatedContents = await executeFileUpdate(fileUpdate.filePath, fileUpdate.contents, plan, conversationHistory);
-        await writeFileContents(fileUpdate.filePath, updatedContents);
-        console.log(chalk.green(`File ${fileUpdate.filePath} has been updated successfully.`));
-      } catch (error) {
-        console.error(chalk.red(`Error updating file ${fileUpdate.filePath}:`), error);
-      }
-    }
-
-    console.log(chalk.blue('File update process completed.'));
-  } catch (error) {
-    console.error(chalk.red('Error in updateFiles:'), error);
-    throw error;
-  }
-}
-
-async function planFileUpdates(fileUpdates: FileUpdate[]): Promise<string> {
+export async function planFileUpdates(fileUpdates: { filePath: string; contents: string }[]): Promise<string> {
   const planningMessage = await client.messages.create({
     model: "claude-3-5-sonnet-20240620",
     max_tokens: 4096,
@@ -95,14 +55,13 @@ async function planFileUpdates(fileUpdates: FileUpdate[]): Promise<string> {
   return planningMessage.content[0].text;
 }
 
-async function executeFileUpdate(filePath: string, fileContents: string, plan: string, conversationHistory: any[]): Promise<string> {
+export async function executeFileUpdate(filePath: string, fileContents: string, plan: string): Promise<string> {
   const executionMessage = await client.messages.create({
     model: "claude-3-5-sonnet-20240620",
     max_tokens: 4096,
     temperature: 0,
     system: SYSTEM_PROMPT,
     messages: [
-      ...conversationHistory,
       {
         role: "user",
         content: [
@@ -116,24 +75,6 @@ async function executeFileUpdate(filePath: string, fileContents: string, plan: s
   });
 
   return extractFileContents(executionMessage.content[0].text);
-}
-
-export async function readFileContents(filePath: string): Promise<string> {
-  try {
-    return await fs.readFile(filePath, 'utf-8');
-  } catch (error) {
-    console.error(chalk.red(`Error reading file ${filePath}:`), error);
-    throw error;
-  }
-}
-
-async function writeFileContents(filePath: string, contents: string): Promise<void> {
-  try {
-    await fs.writeFile(filePath, contents, 'utf-8');
-  } catch (error) {
-    console.error(chalk.red(`Error writing file ${filePath}:`), error);
-    throw error;
-  }
 }
 
 function extractFileContents(responseContent: string): string {

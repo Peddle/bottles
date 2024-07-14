@@ -71,3 +71,21 @@ export async function getFilesWithBComments(projectPath: string): Promise<string
   return filesWithBComments;
 }
 
+export async function readFileContents(filePath: string): Promise<string> {
+  try {
+    const content = await fs.readFile(filePath, 'utf-8');
+    return content;
+  } catch (error) {
+    console.error(`Error reading file ${filePath}:`, error);
+    throw error;
+  }
+}
+
+export async function writeFileContents(filePath: string, content: string): Promise<void> {
+  try {
+    await fs.writeFile(filePath, content, 'utf-8');
+  } catch (error) {
+    console.error(`Error writing file ${filePath}:`, error);
+    throw error;
+  }
+}
