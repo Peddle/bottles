@@ -14,11 +14,11 @@ async function main() {
       return;
     }
 
-    const hasChanges = await hasUncommittedChanges();
-    if (hasChanges) {
-      console.error(chalk.red('Error: There are uncommitted changes. Please commit them before running this script.'));
-      return;
-    }
+    // const hasChanges = await hasUncommittedChanges();
+    // if (hasChanges) {
+    //   console.error(chalk.red('Error: There are uncommitted changes. Please commit them before running this script.'));
+    //   return;
+    // }
 
     const files = await getFilesWithComments(projectPath);
     const updatePlan = await planUpdates(files);

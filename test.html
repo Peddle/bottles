@@ -12,7 +12,10 @@
     </header>
     <main class="container">
         <h1>Hello, World!</h1>
-        <img src="world-image.jpg" alt="Illustration of the world" class="world-image">
+        <svg class="world-logo" width="200" height="200" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="80" fill="#4CAF50" />
+          <path d="M100,20 Q140,60 100,100 Q60,140 100,180 M20,100 Q60,60 100,100 Q140,140 180,100" stroke="#FFF" stroke-width="5" fill="none" />
+        </svg>
         <p>Welcome to this beautiful web page!</p>
         <p class="tagline">Exploring the digital realm, one click at a time.</p>
         <button>Click me!</button>
@@ -20,13 +23,25 @@
             <input type="email" placeholder="Enter your email" required>
             <button type="submit">Subscribe</button>
         </form>
+        <section id="about">
+          <h2>About</h2>
+          <p>Learn more about our mission and values.</p>
+        </section>
+        <section id="contact">
+          <h2>Contact</h2>
+          <p>Get in touch with us for any inquiries.</p>
+        </section>
+        <section id="privacy-policy">
+          <h2>Privacy Policy</h2>
+          <p>Read about how we protect your data and privacy.</p>
+        </section>
     </main>
     <footer>
-        <p>&copy; 2023 Hello World Page. All rights reserved.</p>
+        <p>&copy; 2024 Hello World Page. All rights reserved.</p>
         <nav>
-            <a href="#">About</a>
-            <a href="#">Contact</a>
-            <a href="#">Privacy Policy</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+            <a href="#privacy-policy">Privacy Policy</a>
         </nav>
     </footer>
 </body>
