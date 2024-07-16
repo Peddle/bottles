@@ -6,6 +6,7 @@ import { getCurrentBranch, hasUncommittedChanges, commitChanges, getLastCommitDi
 
 // Main function to orchestrate the file update process
 async function main() {
+	@b make it so that the cli works if no files are found with @b comments
   const projectPath = process.cwd();
   try {
     const currentBranch = await getCurrentBranch();
