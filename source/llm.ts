@@ -1,7 +1,4 @@
-@b clean up unused imports
 import { Anthropic } from '@anthropic-ai/sdk';
-import chalk from 'chalk';
-import boxen from 'boxen';
 
 const SYSTEM_PROMPT = `
 You are an expert in Web development, including CSS, JavaScript, React, Tailwind, Node.JS and Hugo / Markdown. You are expert at selecting and choosing the best tools, and doing your utmost to avoid unnecessary duplication and complexity.

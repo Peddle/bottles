@@ -23,27 +23,11 @@ async function main() {
     }
 
     const files = await getFilesWithComments(projectPath);
-    if (files.length === 0) {
-      console.log(chalk.yellow('No files with @b comments found. Exiting.'));
-      return;
-    }
-		@b after here we know that there is at least one file with @b comments so we dont need any more checks. remove them
 
     const updatePlan = await planUpdates(files);
-    if (updatePlan !== null) {
-      await executeUpdates(files, updatePlan);
-      console.log(chalk.green('\nAll files updated successfully.'));
+    await executeUpdates(files, updatePlan);
+    console.log(chalk.green('\nAll files updated successfully.'));
 
-      commitChanges('bottles commit');
-      console.log(chalk.green('Changes committed successfully.'));
-
-      // Print the diff from the last commit
-      const diff = await getLastCommitDiff();
-      console.log(chalk.cyan('\nDiff from the last commit:'));
-      console.log(diff);
-    } else {
-      console.log(chalk.yellow('No updates were made. Skipping commit.'));
-    }
   } catch (error) {
     console.error('An error occurred:', error);
   }
@@ -96,6 +80,14 @@ async function executeUpdates(files: any[], updatePlan: any) {
 
   await Promise.all(updatePromises);
   console.log(chalk.green('\nAll file updates completed.'));
+
+  await commitChanges('bottles commit');
+  console.log(chalk.green('Changes committed successfully.'));
+
+  // Print the diff from the last commit
+  const diff = await getLastCommitDiff();
+  console.log(chalk.cyan('\nDiff from the last commit:'));
+  console.log(diff);
 }
 
 main();
