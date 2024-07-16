@@ -6,7 +6,6 @@ import { getCurrentBranch, hasUncommittedChanges, commitChanges, getLastCommitDi
 
 // Main function to orchestrate the file update process
 async function main() {
-	@b make it so that the cli works if no files are found with @b comments
   const projectPath = process.cwd();
   try {
     const currentBranch = await getCurrentBranch();
@@ -24,17 +23,26 @@ async function main() {
     }
 
     const files = await getFilesWithComments(projectPath);
+    if (files.length === 0) {
+      console.log(chalk.yellow('No files with @b comments found. Exiting.'));
+      return;
+    }
+
     const updatePlan = await planUpdates(files);
-    await executeUpdates(files, updatePlan);
-    console.log(chalk.green('\nAll files updated successfully.'));
+    if (updatePlan !== null) {
+      await executeUpdates(files, updatePlan);
+      console.log(chalk.green('\nAll files updated successfully.'));
 
-    commitChanges('bottles commit');
-    console.log(chalk.green('Changes committed successfully.'));
+      commitChanges('bottles commit');
+      console.log(chalk.green('Changes committed successfully.'));
 
-    // Print the diff from the last commit
-    const diff = await getLastCommitDiff();
-    console.log(chalk.cyan('\nDiff from the last commit:'));
-    console.log(diff);
+      // Print the diff from the last commit
+      const diff = await getLastCommitDiff();
+      console.log(chalk.cyan('\nDiff from the last commit:'));
+      console.log(diff);
+    } else {
+      console.log(chalk.yellow('No updates were made. Skipping commit.'));
+    }
   } catch (error) {
     console.error('An error occurred:', error);
   }
@@ -43,6 +51,10 @@ async function main() {
 // Function to find files with @b comments and read their contents
 async function getFilesWithComments(projectPath: string) {
   const filesWithBComments = await getFilesWithBComments(projectPath);
+  if (filesWithBComments.length === 0) {
+    console.log(chalk.yellow('\nNo files with @b comments found.'));
+    return [];
+  }
   console.log('\nFiles with @b comments:');
   return Promise.all(filesWithBComments.map(async (file: string) => {
     console.log(chalk.green(file));
@@ -55,12 +67,20 @@ async function getFilesWithComments(projectPath: string) {
 
 // Function to plan file updates using the LLM
 async function planUpdates(files: any[]) {
+  if (files.length === 0) {
+    console.log(chalk.yellow('\nNo files to update. Skipping planning.'));
+    return null;
+  }
   console.log('\nPlanning file updates...');
   return planFileUpdates(files);
 }
 
 // Function to execute file updates based on the update plan
 async function executeUpdates(files: any[], updatePlan: any) {
+  if (files.length === 0 || updatePlan === null) {
+    console.log(chalk.yellow('\nNo files to update. Skipping execution.'));
+    return;
+  }
   console.log('\nExecuting file updates...');
   const updatePromises = files.map(async (file: any) => {
     try {
