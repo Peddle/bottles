@@ -1,3 +1,4 @@
+@b this file should just be for entry points and dealing with parsing args from the CLI and what not
 import {getFilesWithBComments, readFileContents, writeFileContents} from './fs.ts';
 import {planFileUpdates, executeFileUpdate} from './llm.ts';
 import chalk from 'chalk';

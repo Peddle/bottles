@@ -1,10 +1,9 @@
-# Bottles Client
+# Bottles
 
-Lightweight CLI for interacting with Bottles API. Simplifies data management and retrieval.
+bottles is an LLM powered copilot tool
 
 ## Usage
 
 ```
 npm install
-npm start
 ```
