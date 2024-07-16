@@ -1,4 +1,3 @@
-@b this is the minimal git implementation i have and would like to use
 import { execSync } from 'child_process';
 
 export function getCurrentBranch(): string {

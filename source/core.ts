@@ -2,8 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 import chalk from 'chalk';
-@b i dont want to use simple git i already have my own minimal git implementation
-import { simpleGit, SimpleGit, SimpleGitOptions } from 'simple-git';
+import { getCurrentBranch, hasUncommittedChanges, commitChanges, getLastCommitDiff } from './git';
 
 interface FileWithComments {
   filePath: string;
@@ -63,13 +62,6 @@ async function planUpdates(filesWithComments: FileWithComments[]): Promise<Updat
 }
 
 async function executeUpdates(updatePlans: UpdatePlan[]): Promise<void> {
-  const gitOptions: SimpleGitOptions = {
-    baseDir: process.cwd(),
-    binary: 'git',
-    maxConcurrentProcesses: 6,
-  };
-  const git: SimpleGit = simpleGit(gitOptions);
-
   for (const plan of updatePlans) {
     console.log(chalk.blue(`Updating file: ${plan.filePath}`));
     console.log(chalk.yellow('Instructions:'));
@@ -79,14 +71,19 @@ async function executeUpdates(updatePlans: UpdatePlan[]): Promise<void> {
     // For now, we'll just log a placeholder message
     console.log(chalk.green('File updated successfully (placeholder)'));
 
-    // Stage the changes
-    await git.add(plan.filePath);
-
-    // Commit the changes
-    const commitMessage = `Updated ${path.basename(plan.filePath)} based on @b comments`;
-    await git.commit(commitMessage);
-
-    console.log(chalk.green(`Changes committed: ${commitMessage}`));
+    // Check for uncommitted changes
+    if (hasUncommittedChanges()) {
+      // Commit the changes
+      const commitMessage = `Updated ${path.basename(plan.filePath)} based on @b comments`;
+      commitChanges(commitMessage);
+      console.log(chalk.green(`Changes committed: ${commitMessage}`));
+      
+      // Log the diff of the last commit
+      console.log(chalk.cyan('Diff of the last commit:'));
+      console.log(getLastCommitDiff());
+    } else {
+      console.log(chalk.yellow('No changes to commit'));
+    }
   }
 
   console.log(chalk.green('All updates completed and committed.'));
