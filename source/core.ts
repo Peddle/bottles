@@ -14,9 +14,18 @@ interface UpdatePlan {
   instructions: string[];
 }
 
-@b looks like we are no longer checking the branch to make sure we aren't on main or master
+function checkBranch(): void {
+  const currentBranch = getCurrentBranch();
+  if (currentBranch === 'main' || currentBranch === 'master') {
+    console.error(chalk.red('Error: Cannot run bottles on main or master branch.'));
+    process.exit(1);
+  }
+}
+
 export async function runBottles(directory: string): Promise<void> {
   try {
+    // Check if we're on main or master branch before proceeding
+    checkBranch();
     const filesWithComments = await getFilesWithComments(directory);
     const updatePlans = await planUpdates(filesWithComments);
     await executeUpdates(updatePlans);
