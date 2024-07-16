@@ -1,4 +1,3 @@
-@b no action required - marking for visibility
 import {getFilesWithBComments, readFileContents, writeFileContents} from './fs.ts';
 import {planFileUpdates, executeFileUpdate} from './llm.ts';
 import chalk from 'chalk';
