@@ -1,3 +1,4 @@
+@b clean up unused imports
 import { Anthropic } from '@anthropic-ai/sdk';
 import chalk from 'chalk';
 import boxen from 'boxen';

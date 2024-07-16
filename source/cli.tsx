@@ -27,6 +27,7 @@ async function main() {
       console.log(chalk.yellow('No files with @b comments found. Exiting.'));
       return;
     }
+		@b after here we know that there is at least one file with @b comments so we dont need any more checks. remove them
 
     const updatePlan = await planUpdates(files);
     if (updatePlan !== null) {
