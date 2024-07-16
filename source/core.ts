@@ -14,6 +14,7 @@ interface UpdatePlan {
   instructions: string[];
 }
 
+@b looks like we are no longer checking the branch to make sure we aren't on main or master
 export async function runBottles(directory: string): Promise<void> {
   try {
     const filesWithComments = await getFilesWithComments(directory);
@@ -77,7 +78,7 @@ async function executeUpdates(updatePlans: UpdatePlan[]): Promise<void> {
       const commitMessage = `Updated ${path.basename(plan.filePath)} based on @b comments`;
       commitChanges(commitMessage);
       console.log(chalk.green(`Changes committed: ${commitMessage}`));
-      
+
       // Log the diff of the last commit
       console.log(chalk.cyan('Diff of the last commit:'));
       console.log(getLastCommitDiff());
