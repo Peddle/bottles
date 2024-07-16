@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 import chalk from 'chalk';
+@b i dont want to use simple git i already have my own minimal git implementation
 import { simpleGit, SimpleGit, SimpleGitOptions } from 'simple-git';
 
 interface FileWithComments {
